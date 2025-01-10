@@ -5,7 +5,7 @@ rm(list = ls());gc()
 
 #................................ Read data ............................... ####
 # Deflation
-IPC <- read_excel("Datos/IPC_Indices.xlsx")
+IPC <- read_excel("Data/IPC_Indices.xlsx")
 Anno_base <- 2023
 ipc_anual <- IPC %>% pivot_longer(cols = -Mes,names_to = "year", values_to = "IPC") %>% 
   filter(!is.na(IPC)) %>% group_by(year) %>% 
@@ -21,12 +21,12 @@ tabreg <- data.frame(REGION = c('Amazonia_Orinoquia','Bogota_Cundinamarca','Cari
                                 'Central','Oriental','Pacifico'),
                      region = regions_ER)
 
-regions <- read_excel("Datos/Regiones.xlsx") %>% 
+regions <- read_excel("Data/Regiones.xlsx") %>% 
   group_by(COD_DPTO,NAME_DPTO,REGION) %>% summarise(.groups = 'drop') %>%
   left_join(tabreg,by = 'REGION') %>% select(-REGION)
 
 # GEIH 2014-2023
-geih <- readRDS("Datos/GEIH_2014_2023.rds") %>% select(-Factor_multiplicacion) %>%
+geih <- readRDS("Data/GEIH_2014_2023.rds") %>% select(-Factor_multiplicacion) %>%
   left_join(ipc_anual,by = 'year') %>%
   mutate(P6500_defl = as.numeric(P6500)*Factor_multiplicacion,
          P6750_defl = as.numeric(P6750)*Factor_multiplicacion,
